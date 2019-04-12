@@ -64,7 +64,51 @@ SET first_name = "GROUCHO"
 WHERE last_name = "WILLIAMS" AND first_name = "HARPO";
 
 -- You cannot locate the schema of the address table. Which query would you use to re-create it?
-DESCRIBE sakila.address;
+DESCRIBE  sakila.address;
+
+-- Use JOIN to display the first, last names and address of each staff member. 
+-- Use the tables staff and address
+SELECT first_name, last_name, address
+FROM staff
+INNER JOIN address
+ON staff.address_id= address.address_id;
+
+-- Use JOIN to display the total amount rung up by each staff member in August of 2005. 
+-- Use tables staff and payment
+SELECT p.staff_id, s.first_name, s.last_name, SUM(p.amount) as "Total Amount"
+FROM staff AS s
+JOIN payment AS p
+ON s.staff_id= p.staff_id AND p.payment_date LIKE "2005-08%"
+GROUP BY s.staff_id;
+
+/* List each film and the number of actors who are listed for that film. 
+Use tables film_actor and film. Use inner join */
+SELECT f.title, COUNT(fa.actor_id) as "Count of Actors"
+FROM film AS f
+INNER JOIN film_actor AS fa
+ON f.film_id= fa.film_id
+GROUP BY f.title;
+
+-- How many copies of the film Hunchback Impossible exist in the inventory system?
+SELECT COUNT(*) AS "Number of Copies"
+FROM inventory
+WHERE film_id
+IN (
+	SELECT film_id
+    FROM film 
+    WHERE title = "Hunchback Impossible"
+);
+
+/*Using the tables payment and customer and the JOIN command, list the total paid by each customer. 
+List the customers alphabetically by last name*/
+SELECT c.first_name, c.last_name, SUM(p.amount) as "Total Amount Paid"
+FROM customer AS c
+JOIN payment AS p
+ON c.customer_id= p.customer_id
+GROUP BY c.customer_id 
+ORDER BY c.last_name ASC;
+
+-- Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
 
 
 
