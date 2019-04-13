@@ -149,5 +149,66 @@ JOIN country AS cou
 ON (cou.country_id = cty.country_id)
 WHERE cou.country= 'Canada';
 
--- Sales have been lagging among young families, and you wish to target all family movies for a promotion. 
+-- Target all family movies for a promotion. 
 -- Identify all movies categorized as family films.
+SELECT title, description 
+FROM film
+WHERE film_id
+IN (
+	SELECT film_id
+    FROM film_category
+    WHERE category_id
+    IN (
+    SELECT category_id
+    FROM category
+    WHERE name = "Family"
+    )
+);
+
+-- Display the most frequently rented movies in descending order.
+SELECT f.title, COUNT(r.rental_id) AS "Number of Times Rented"
+FROM rental AS r
+JOIN inventory as i
+ON r.inventory_id = i.inventory_id
+JOIN film as f
+ON i.film_id = f.film_id
+GROUP BY f.title 
+ORDER BY COUNT(r.rental_id) DESC;
+
+-- How much business, in dollars, did each store brought in?
+SELECT s.store_id, SUM(p.amount) AS "Amount"
+FROM payment AS p
+JOIN rental AS r
+ON p.rental_id = r.rental_id
+JOIN inventory AS i 
+ON r.inventory_id = i.inventory_id
+JOIN store AS s
+ON i.store_id = s.store_id
+GROUP BY s.store_id;
+
+--  Write a query to display for each store its store ID, city, and country.
+SELECT store_id, city, country
+FROM store AS s
+JOIN address AS a
+ON s.address_id = a.address_id
+JOIN city as cty
+ON a.city_id = cty.city_id
+JOIN country AS cou
+ON cty.country_id = cou.country_id;
+
+
+--  List the top five genres in gross revenue in descending order. 
+-- (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.
+SELECT c.name AS "Genre", SUM(p.amount) AS "Gross Revenue" 
+FROM category AS c
+JOIN film_category AS fc 
+ON (c.category_id = fc.category_id)
+JOIN inventory AS i 
+ON (fc.film_id = i.film_id)
+JOIN rental AS r 
+ON (i.inventory_id = r.inventory_id)
+JOIN payment AS p 
+ON (r.rental_id = p.rental_id)
+GROUP BY c.name 
+ORDER BY SUM(p.amount) DESC
+LIMIT 5;
