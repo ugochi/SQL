@@ -212,3 +212,26 @@ ON (r.rental_id = p.rental_id)
 GROUP BY c.name 
 ORDER BY SUM(p.amount) DESC
 LIMIT 5;
+
+-- you would like to have an easy way of viewing the Top five genres by gross revenue. 
+-- Use the solution from the problem above to create a view.
+CREATE VIEW Top_Five_Genre_Revenue AS
+SELECT c.name AS "Genre", SUM(p.amount) AS "Gross Revenue" 
+FROM category AS c
+JOIN film_category AS fc 
+ON (c.category_id = fc.category_id)
+JOIN inventory AS i 
+ON (fc.film_id = i.film_id)
+JOIN rental AS r 
+ON (i.inventory_id = r.inventory_id)
+JOIN payment AS p 
+ON (r.rental_id = p.rental_id)
+GROUP BY c.name 
+ORDER BY SUM(p.amount) DESC
+LIMIT 5;
+
+-- How would you display the view that you created in 8a?
+SELECT * FROM top_five_genre_revenue;
+
+-- You find that you no longer need the view top_five_genres. Write a query to delete it.
+DROP VIEW top_five_genre_revenue;
