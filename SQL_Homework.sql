@@ -109,7 +109,45 @@ GROUP BY c.customer_id
 ORDER BY c.last_name ASC;
 
 -- Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+SELECT title
+FROM film 
+WHERE title like "K%" OR  title like "Q%"
+AND title IN (
+	SELECT title
+    FROM film as f
+    WHERE f.language_id
+    IN (
+		SELECT l.language_id
+        FROM language as l
+        WHERE l.name = "English"
+));
 
+-- Use subqueries to display all actors who appear in the film Alone Trip.
+SELECT first_name, last_name
+FROM actor 
+WHERE actor_id
+IN (
+	SELECT actor_id
+    FROM film_actor
+    WHERE film_id
+    IN (
+		SELECT film_id
+        FROM film
+        WHERE title = "Alone Trip"
+        )
+	);
+    
+-- Need names and email addresses of all Canadian customers. Use joins to retrieve this information.
 
+SELECT cus.first_name, cus.last_name, cus.email 
+FROM customer AS cus
+JOIN address AS a 
+ON (cus.address_id = a.address_id)
+JOIN city AS cty
+ON (cty.city_id = a.city_id)
+JOIN country AS cou
+ON (cou.country_id = cty.country_id)
+WHERE cou.country= 'Canada';
 
-
+-- Sales have been lagging among young families, and you wish to target all family movies for a promotion. 
+-- Identify all movies categorized as family films.
