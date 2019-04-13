@@ -202,13 +202,13 @@ ON cty.country_id = cou.country_id;
 SELECT c.name AS "Genre", SUM(p.amount) AS "Gross Revenue" 
 FROM category AS c
 JOIN film_category AS fc 
-ON (c.category_id = fc.category_id)
+ON c.category_id = fc.category_id
 JOIN inventory AS i 
-ON (fc.film_id = i.film_id)
+ON fc.film_id = i.film_id
 JOIN rental AS r 
-ON (i.inventory_id = r.inventory_id)
+ON i.inventory_id = r.inventory_id
 JOIN payment AS p 
-ON (r.rental_id = p.rental_id)
+ON r.rental_id = p.rental_id
 GROUP BY c.name 
 ORDER BY SUM(p.amount) DESC
 LIMIT 5;
@@ -219,13 +219,13 @@ CREATE VIEW Top_Five_Genre_Revenue AS
 SELECT c.name AS "Genre", SUM(p.amount) AS "Gross Revenue" 
 FROM category AS c
 JOIN film_category AS fc 
-ON (c.category_id = fc.category_id)
+ON c.category_id = fc.category_id
 JOIN inventory AS i 
-ON (fc.film_id = i.film_id)
+ON fc.film_id = i.film_id
 JOIN rental AS r 
-ON (i.inventory_id = r.inventory_id)
+ON i.inventory_id = r.inventory_id
 JOIN payment AS p 
-ON (r.rental_id = p.rental_id)
+ON r.rental_id = p.rental_id
 GROUP BY c.name 
 ORDER BY SUM(p.amount) DESC
 LIMIT 5;
